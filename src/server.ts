@@ -1,6 +1,5 @@
 import Fastify, { FastifyInstance, FastifyServerOptions } from 'fastify'
 import { Container } from 'inversify'
-import { appContainer } from './inversify.config'
 import { AdmissionController } from './controllers/admission'
 import fastifyInversifyPlugin from './inversify.fastify.plugin'
 import fastifyUnderPressurePlugin from '@fastify/under-pressure'
@@ -22,7 +21,7 @@ export class Server {
 
   private registerPlugins () {
     this.fastify.register(fastifyInversifyPlugin, {
-      container: appContainer,
+      container: this.container,
       disposeOnClose: false,
       disposeOnResponse: false
     })
