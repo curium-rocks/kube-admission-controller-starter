@@ -1,5 +1,5 @@
 {
-  "name": "kube-starter-template",
+  "name": "kube-admission-controller-starter",
   "version": "0.1.0",
   "description": "A starter template for creating TypeScript, Node.JS apps that interface with kubernetes",
   "main": "dist/app.js",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/curium-rocks/kube-starter-template.git"
+    "url": "git+https://github.com/curium-rocks/kube-admission-controller-starter.git"
   },
   "keywords": [
     "k8s",
@@ -26,9 +26,9 @@
   "author": "",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/curium-rocks/kube-starter-template/issues"
+    "url": "https://github.com/curium-rocks/kube-admission-controller-starter/issues"
   },
-  "homepage": "https://github.com/curium-rocks/kube-starter-template#readme",
+  "homepage": "https://github.com/curium-rocks/kube-admission-controller-starter#readme",
   "devDependencies": {
     "@jest/globals": "29.0.2",
     "@types/jest": "^29.0.0",
@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@kubernetes/client-node": "^0.17.0",
+    "fastify": "^4.5.3",
     "inversify": "^6.0.1",
     "reflect-metadata": "^0.1.13"
   }

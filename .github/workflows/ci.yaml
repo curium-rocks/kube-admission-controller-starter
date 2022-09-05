@@ -54,7 +54,7 @@ jobs:
      - build
     env:
       REGISTRY: 'ghcr.io'
-      IMAGE_NAME: 'curium-rocks/kube-starter-template'
+      IMAGE_NAME: 'curium-rocks/kube-admission-controller-starter'
     permissions:
       contents: read
       packages: write
