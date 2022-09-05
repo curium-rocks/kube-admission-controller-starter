@@ -1,0 +1,51 @@
+{
+  "name": "kube-starter-template",
+  "version": "0.1.0",
+  "description": "A starter template for creating TypeScript, Node.JS apps that interface with kubernetes",
+  "main": "dist/app.js",
+  "scripts": {
+    "start": "node dist/app.js",
+    "build": "node_modules/typescript/bin/tsc --project ./",
+    "test": "jest --coverage --testPathPattern='test/.*\\.spec\\.ts'",
+    "lint": "eslint --ext .ts src/ test/",
+    "lint:fix": "eslint --ext .ts src/ test/ --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/curium-rocks/kube-starter-template.git"
+  },
+  "keywords": [
+    "k8s",
+    "kubernetes",
+    "starter",
+    "template",
+    "typescript",
+    "jest",
+    "inversify"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/curium-rocks/kube-starter-template/issues"
+  },
+  "homepage": "https://github.com/curium-rocks/kube-starter-template#readme",
+  "devDependencies": {
+    "@jest/globals": "29.0.2",
+    "@types/jest": "^29.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.15.0",
+    "@typescript-eslint/parser": "^5.15.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "jest": "^28.0.0",
+    "ts-jest": "28.x.x",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "@kubernetes/client-node": "^0.17.0",
+    "inversify": "^6.0.1",
+    "reflect-metadata": "^0.1.13"
+  }
+}
