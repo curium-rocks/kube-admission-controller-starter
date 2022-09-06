@@ -1,20 +1,22 @@
 import { Container } from 'inversify'
-import { ContainerImageInformation } from './models/kube'
-import { IKubernetes } from './services/kubernetes'
-import { TYPES } from './types'
+import { Server } from './server'
+import { FastifyServerOptions } from 'fastify'
 
-export default async function main (appContainer: Container, printToConsole: boolean) : Promise<ContainerImageInformation[]> {
-  const kubernetes = appContainer.get<IKubernetes>(TYPES.Services.Kubernetes)
-  const images = await kubernetes.getImageList()
-  if (printToConsole) {
-    console.log(images)
-  }
-  return images
+export default async function main (container: Container, options?: FastifyServerOptions, host?: string, port? : number) : Promise<Server> {
+  return Promise.resolve(new Server(container, options || {
+    logger: true
+  }, host || '0.0.0.0', port || 3000))
 }
 
 if (require.main === module) {
   const appContainer = require('./inversify.config').appContainer
-  main(appContainer, true).catch((err) => {
+  main(appContainer).then((server) => {
+    return server.open().then(() => {
+      process.on('SIGINT|SIGTERM', async () => {
+        await server.close()
+      })
+    })
+  }).catch((err) => {
     console.error(`Error while running: ${err}`)
   })
 }
