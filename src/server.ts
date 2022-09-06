@@ -7,12 +7,13 @@ export class Server {
   private readonly container: Container
   private readonly fastify: FastifyInstance
 
-  constructor (container: Container, options: FastifyServerOptions, port: number) {
+  constructor (container: Container, options: FastifyServerOptions, host: string, port: number) {
     this.container = container
     this.fastify = Fastify(options)
     this.registerPlugins()
     this.registerControllers()
     this.fastify.listen({
+      host,
       port
     }).catch((err) => {
       this.fastify.log.error(`Error occurred while attempting to listen on port ${port}, error message: ${err.message}`)
@@ -20,6 +21,7 @@ export class Server {
   }
 
   private registerPlugins () {
+    this.fastify.log.info('Registering plugins')
     this.fastify.register(fastifyInversifyPlugin, {
       container: this.container,
       disposeOnClose: false,
@@ -34,11 +36,18 @@ export class Server {
       retryAfter: 50,
       exposeStatusRoute: true
     })
+    this.fastify.log.info('Finished registering plugins')
   }
 
   private registerControllers () {
+    this.fastify.log.info('Registering controllers')
     this.fastify.register(AdmissionController, {
       prefix: 'api/v1/admission'
     })
+    this.fastify.log.info('Finished registering controllers')
+  }
+
+  public async close () : Promise<void> {
+    await this.fastify.close()
   }
 }

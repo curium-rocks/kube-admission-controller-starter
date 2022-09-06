@@ -16,6 +16,7 @@ declare module 'fastify' {
 export function InversifyFastifyPlugin (fastify: FastifyInstance, options: FastifyPluginOptions, done: Function) {
   if (!options.container) done(new Error('options.container must be provided to the plugin'))
   if (!(options.container instanceof Container)) done(new Error('options.container must be an instance of inversify.Container'))
+  fastify.log.info('Registering InversifyFastifyPlugin')
   fastify.decorate('inversifyContainer', options.container)
   fastify.decorateRequest('inversifyScope', null)
 
@@ -36,6 +37,7 @@ export function InversifyFastifyPlugin (fastify: FastifyInstance, options: Fasti
     })
   }
   done()
+  fastify.log.info('Finished Registering InversifyFastifyPlugin')
 }
 
 export default fastifyPlugin(InversifyFastifyPlugin, {
