@@ -20,5 +20,8 @@ appContainer.bind<CoreV1Api>(TYPES.K8S.CoreApi).toDynamicValue((context: interfa
   const builder = new K8sClientBuilder(CoreV1Api)
   return builder.buildClient(context.container.get<KubeConfig>(TYPES.K8S.Config)) as CoreV1Api
 })
+appContainer.bind<string[]>(TYPES.Config.AllowedList).toConstantValue([])
+appContainer.bind<string[]>(TYPES.Config.BlockedList).toConstantValue(['webgoat/webgoat-8.0'])
+appContainer.bind<boolean>(TYPES.Config.StrictMode).toConstantValue(false)
 
 export { appContainer }

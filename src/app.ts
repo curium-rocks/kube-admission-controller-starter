@@ -2,10 +2,10 @@ import { Container } from 'inversify'
 import { Server } from './server'
 import { FastifyServerOptions } from 'fastify'
 
-export default async function main (container: Container, options?: FastifyServerOptions) : Promise<Server> {
+export default async function main (container: Container, options?: FastifyServerOptions, host?: string, port? : number) : Promise<Server> {
   return Promise.resolve(new Server(container, options || {
     logger: true
-  }, '0.0.0.0', 3000))
+  }, host || '0.0.0.0', port || 3000))
 }
 
 if (require.main === module) {

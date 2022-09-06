@@ -1,10 +1,20 @@
-import { describe, it } from '@jest/globals'
-
+import { describe, it, expect } from '@jest/globals'
+import app from '../src/app'
+import { appContainer } from '../src/inversify.config'
+import { Server } from '../src/server'
 describe('app', () => {
-  it('Should create the server', () => {
-
+  it('Should create the server', async () => {
+    const appObj = await app(appContainer, {
+      logger: false
+    }, '127.0.0.1', 30001)
+    expect(appObj).toBeInstanceOf(Server)
+    await appObj.close()
   })
-  it('Should close server on SIGINT', () => {
-
+  it('Should close server on SIGINT', async () => {
+    const appObj = await app(appContainer, {
+      logger: false
+    }, '127.0.0.1', 30002)
+    expect(appObj).toBeInstanceOf(Server)
+    expect(appObj.close.bind(appObj)).not.toThrow()
   })
 })

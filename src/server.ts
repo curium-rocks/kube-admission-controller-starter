@@ -48,6 +48,6 @@ export class Server {
   }
 
   public async close () : Promise<void> {
-    await this.fastify.close()
+    await this.fastify?.close()
   }
 }

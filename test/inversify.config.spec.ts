@@ -15,4 +15,16 @@ describe('inversify.config', () => {
   it('binds Kubernetes Service', () => {
     expect(appContainer.isBound(TYPES.Services.Kubernetes)).toBeTruthy()
   })
+  it('binds Admission Service', () => {
+    expect(appContainer.isBound(TYPES.Services.Admission)).toBeTruthy()
+  })
+  it('binds AllowList', () => {
+    expect(appContainer.isBound(TYPES.Config.AllowedList)).toBeTruthy()
+  })
+  it('binds BlockedList', () => {
+    expect(appContainer.isBound(TYPES.Config.AllowedList)).toBeTruthy()
+  })
+  it('binds StrictMode', () => {
+    expect(appContainer.isBound(TYPES.Config.StrictMode)).toBeTruthy()
+  })
 })

@@ -6,7 +6,7 @@ export function AdmissionController (instance: FastifyInstance, opts: FastifyPlu
   instance.log.info('Registering AdmissionController')
   const admissionService = instance.inversifyContainer.get<IAdmission>(TYPES.Services.Admission)
   instance.post('/', async (req, reply) => {
-    const body = req.body as any
+    const body: any = req.body
     reply.send({
       uid: body.uid,
       allowed: await admissionService.allowAdmission([])
