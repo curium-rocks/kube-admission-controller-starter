@@ -6,18 +6,16 @@ import fastifyUnderPressurePlugin from '@fastify/under-pressure'
 export class Server {
   private readonly container: Container
   private readonly fastify: FastifyInstance
+  private readonly host: string
+  private readonly port: number
 
   constructor (container: Container, options: FastifyServerOptions, host: string, port: number) {
     this.container = container
+    this.host = host
+    this.port = port
     this.fastify = Fastify(options)
     this.registerPlugins()
     this.registerControllers()
-    this.fastify.listen({
-      host,
-      port
-    }).catch((err) => {
-      this.fastify.log.error(`Error occurred while attempting to listen on port ${port}, error message: ${err.message}`)
-    })
   }
 
   private registerPlugins () {
@@ -45,6 +43,13 @@ export class Server {
       prefix: 'api/v1/admission'
     })
     this.fastify.log.info('Finished registering controllers')
+  }
+
+  public async open () : Promise<void> {
+    await this.fastify.listen({
+      port: this.port,
+      host: this.host
+    })
   }
 
   public async close () : Promise<void> {

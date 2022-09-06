@@ -5,16 +5,18 @@ import { Server } from '../src/server'
 describe('app', () => {
   it('Should create the server', async () => {
     const appObj = await app(appContainer, {
-      logger: false
+      logger: true
     }, '127.0.0.1', 30001)
     expect(appObj).toBeInstanceOf(Server)
+    await appObj.open()
     await appObj.close()
   })
-  it('Should close server on SIGINT', async () => {
+  it('Should close server', async () => {
     const appObj = await app(appContainer, {
-      logger: false
+      logger: true
     }, '127.0.0.1', 30002)
     expect(appObj).toBeInstanceOf(Server)
-    expect(appObj.close.bind(appObj)).not.toThrow()
+    await appObj.open()
+    await appObj.close()
   })
 })

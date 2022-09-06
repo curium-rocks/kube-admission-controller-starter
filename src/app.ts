@@ -11,8 +11,10 @@ export default async function main (container: Container, options?: FastifyServe
 if (require.main === module) {
   const appContainer = require('./inversify.config').appContainer
   main(appContainer).then((server) => {
-    process.on('SIGINT|SIGTERM', async () => {
-      await server.close()
+    return server.open().then(() => {
+      process.on('SIGINT|SIGTERM', async () => {
+        await server.close()
+      })
     })
   }).catch((err) => {
     console.error(`Error while running: ${err}`)
