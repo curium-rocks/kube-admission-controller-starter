@@ -153,3 +153,15 @@ jobs:
       - name: Deploy (Branch)
         if: ${{ github.event_name != 'pull_request' }}
         run: npm run helm:deploy -- --set 'imagePullSecrets[0].name'=ghcr-credentials --set image.tag=main
+      - name: Collect Logs On Failure
+        if: ${{ failure() }}
+        run: |
+          mkdir -p /tmp/failure-logs
+          minikube logs > /tmp/failure-logs/minikube.log
+      - name: Upload Logs On Failure
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ runner.name }} minikube logs
+          path: |
+            /tmp/failure-logs
