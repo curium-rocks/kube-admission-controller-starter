@@ -1,4 +1,4 @@
-name: Node.js CI
+name: CI
 
 on:
   push:
@@ -141,3 +141,11 @@ jobs:
         run: npm ci
       - name: Start Minikube
         run: npm run minikube:start -- --kubernetes-version=${{ matrix.k8s-version }}
+      - name: Create Pull Secret
+        run: npm run "k8s:createPullSecret" --helm_namespace=default --registry_username=${{ github.actor }} --registry_password=${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy (PR)
+        if: ${{ github.event_name == 'pull_request' }}
+        run: npm run helm:deploy -- --set 'imagePullSecrets[0].name'=ghcr-credentials --set image.tag=pr-${{ github.event.number }}
+      - name: Deploy (Branch)
+        if: ${{ github.event_name != 'pull_request' }}
+        run: npm run helm:deploy -- --set 'imagePullSecrets[0].name'=ghcr-credentials --set image.tag=main
