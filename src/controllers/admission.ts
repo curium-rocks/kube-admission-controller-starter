@@ -10,6 +10,7 @@ export function AdmissionController (instance: FastifyInstance, opts: FastifyPlu
 
   instance.post('/', async (req, reply) => {
     const body: any = req.body
+    instance.log.info(`Received admission review req: ${JSON.stringify(body)}`)
     reply.send({
       uid: body.uid,
       allowed: await admissionService.allowAdmission([])

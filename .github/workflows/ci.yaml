@@ -114,3 +114,17 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "true"
         run: cosign sign --force --recursive ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }}
+  # deploy it and verify that expected things are allowed or disallowed
+  verify:
+    runs-on: ubuntu-latest
+    needs:
+     - build-image
+    env:
+      REGISTRY: 'ghcr.io'
+      IMAGE_NAME: 'curium-rocks/kube-admission-controller-starter'
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
