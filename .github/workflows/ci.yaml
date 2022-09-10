@@ -143,6 +143,8 @@ jobs:
         run: npm run minikube:start -- --kubernetes-version=${{ matrix.k8s-version }}
       - name: Create Pull Secret
         run: npm run k8s:createPullSecret --helm_namespace=default --registry_username=${{ github.actor }} --registry_password=${{ secrets.GITHUB_TOKEN }}
+      - name: Add Helm Repos
+        run: npm run helm:addRepos
       - name: Deploy CertManager
         run: npm run helm:deployCertManager
       - name: Deploy (PR)
