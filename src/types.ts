@@ -6,7 +6,10 @@ const TYPES = {
   Config: {
     AllowedList: Symbol.for('AllowedList'),
     BlockedList: Symbol.for('BlockedList'),
-    StrictMode: Symbol.for('StrictMode')
+    StrictMode: Symbol.for('StrictMode'),
+    TLSEnabled: Symbol.for('TLSEnabled'),
+    TLSKeyPath: Symbol.for('TLSKeyPath'),
+    TLSCertPath: Symbol.for('TLSCertPath')
   },
   K8S: {
     Config: Symbol.for('Config'),

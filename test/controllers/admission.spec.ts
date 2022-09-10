@@ -55,4 +55,23 @@ describe('controllers/admission', () => {
     expect(responseBody.uid).toEqual('allowed-uid')
     expect(responseBody.allowed).toBeTruthy()
   })
+  it('Should track requests served', async () => {
+    jest.spyOn(mockAdmissionService, 'allowAdmission').mockImplementation((images) => {
+      return Promise.resolve(true)
+    })
+    const testReqResp = await fastify.inject({
+      method: 'POST',
+      payload: {
+        uid: 'meta-uid'
+      },
+      url: '/api/v1/admission'
+    })
+    expect(testReqResp.statusCode).toEqual(200)
+    const metaFetchResult = await fastify.inject({
+      method: 'GET',
+      url: '/api/v1/admission/meta'
+    })
+    const resp = JSON.parse(metaFetchResult.body)
+    expect(resp.requestsServed).toBeGreaterThan(0)
+  })
 })

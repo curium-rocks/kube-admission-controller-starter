@@ -1,0 +1,25 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ include "kube-admission-controller-starter.fullname" . }}-hooks
+webhooks:
+- name:  {{ include "kube-admission-controller-starter.fullname" . }}.{{ .Release.Namespace }}.svc
+  admissionReviewVersions: ["v1"]
+  sideEffects: None
+  timeoutSeconds: 1
+  failurePolicy: Ignore
+  rules:
+  - operations: ["CREATE"]
+    apiGroups: ["*"]
+    apiVersions: ["*"]
+    resources: ["*"]
+    scope: "*"
+  clientConfig:
+    service:
+      namespace: {{ .Release.Namespace }}
+      name: {{ include "kube-admission-controller-starter.fullname" . }}
+      path: /api/v1/admission
+      {{/* if this is an upgrade and cm is enabled, and it's a self signed issuer, enforce hookCaBundle being set */}}
+      {{- if .Values.hookCaBundle }}
+      caBundle: {{ .Values.hookCaBundle }}
+      {{- end }}
