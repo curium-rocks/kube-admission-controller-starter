@@ -32,10 +32,19 @@ spec:
           secret:
             secretName: {{ .Values.tlsSecretName }}
             optional: false
+        - name: config-volume
+          configMap:
+            name: {{ .Release.Name }}-config
+            items:
+              - key: production.json
+                path: production.json
       containers:
         - volumeMounts:
           - name: tls
             mountPath: '/var/run/secrets/tls'
+            readOnly: true
+          - name: config-volume
+            mountPath: /var/run/config/
             readOnly: true
           name: {{ .Chart.Name }}
           securityContext:
@@ -43,8 +52,8 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            - name: TLS_ENABLED
-              value: "true"
+          - name: NODE_CONFIG_DIR
+            value: /var/run/config:/usr/src/app/config
           ports:
             - name: https
               containerPort: 3000

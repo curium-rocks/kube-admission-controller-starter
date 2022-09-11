@@ -15,9 +15,9 @@
     "helm:deploy": "helm upgrade --install kube-admission-controller-starter ./helm/kube-admission-controller-starter/ --debug --wait",
     "helm:uninstall": "helm del kube-admission-controller-starter",
     "helm:uninstallCertManager": "helm del --namespace cert-manager cert-manager",
-    "build": "node_modules/typescript/bin/tsc --project ./",
+    "build": "node_modules/typescript/bin/tsc --project ./ && mkdir -p dist/config && cp src/config/*.json dist/config/",
     "build:image": "docker build . -t ghcr.io/curium-rocks/kube-admission-controller-starter:local",
-    "test": "jest --coverage --testPathPattern='test/.*\\.spec\\.ts'",
+    "test": "NODE_CONFIG_DIR=$PWD/src/config/:$PWD/test/config/ jest --coverage --testPathPattern='test/.*\\.spec\\.ts'",
     "lint": "eslint --ext .ts src/ test/",
     "lint:fix": "eslint --ext .ts src/ test/ --fix"
   },
@@ -42,6 +42,7 @@
   "homepage": "https://github.com/curium-rocks/kube-admission-controller-starter#readme",
   "devDependencies": {
     "@jest/globals": "29.0.2",
+    "@types/config": "^3.3.0",
     "@types/jest": "^29.0.0",
     "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",
@@ -57,6 +58,7 @@
   "dependencies": {
     "@fastify/under-pressure": "^8.1.0",
     "@kubernetes/client-node": "^0.17.0",
+    "config": "^3.3.8",
     "fastify": "^4.5.3",
     "fastify-plugin": "^4.2.1",
     "inversify": "^6.0.1",
