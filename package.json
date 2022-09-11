@@ -17,7 +17,8 @@
     "helm:uninstallCertManager": "helm del --namespace cert-manager cert-manager",
     "build": "node_modules/typescript/bin/tsc --project ./ && mkdir -p dist/config && cp src/config/*.json dist/config/",
     "build:image": "docker build . -t ghcr.io/curium-rocks/kube-admission-controller-starter:local",
-    "test": "NODE_CONFIG_DIR=$PWD/src/config/:$PWD/test/config/ jest --coverage --testPathPattern='test/.*\\.spec\\.ts'",
+    "test": "NODE_CONFIG_DIR=$PWD/src/config/:$PWD/test/config/ jest --coverage --testPathPattern='test/.*\\.spec\\.ts' --testPathIgnorePatterns='test/.*\\.e2e\\.spec\\.ts'",
+    "test:e2e": "NODE_CONFIG_DIR=$PWD/src/config/:$PWD/test/config/ jest --testPathPattern='test/.*\\.e2e\\.spec\\.ts'",
     "lint": "eslint --ext .ts src/ test/",
     "lint:fix": "eslint --ext .ts src/ test/ --fix"
   },

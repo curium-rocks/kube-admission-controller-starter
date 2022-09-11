@@ -8,5 +8,8 @@
     "enabled": false,
     "keyPath": "/var/run/secrets/tls/tls.key",
     "certPath": "/var/run/secrets/tls/tls.crt"
+  },
+  "log": {
+    "level": "info"
   }
 }

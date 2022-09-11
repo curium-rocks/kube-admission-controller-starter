@@ -153,11 +153,17 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         timeout-minutes: 10
         run: npm run helm:deploy -- --set 'imagePullSecrets[0].name'=ghcr-credentials --set image.tag=main
+      - name: Run E2E Tests
+        run: npm run test:e2e
       - name: Collect Logs On Failure
         if: ${{ failure() }}
         run: |
           mkdir -p /tmp/failure-logs
           minikube logs > /tmp/failure-logs/minikube.log
+          kubectl logs deployments/kube-admission-controller-starter --prefix=true --ignore-errors=true --timestamps --pod-running-timeout=60s > /tmp/failure-logs/kube-admission-controller-starter.deployment.log
+          kubectl describe deployment kube-admission-controller-starter > /tmp/failure-logs/kube-admission-controller-starter.deployment.describe
+          kubectl get deployment kube-admission-controller-starter -o yaml > /tmp/failure-logs/kube-admission-controller-starter.deployment.yaml
+          kubectl describe configmap kube-admission-controller-starter-config > /tmp/failure-logs/kube-admission-controller-starter.configmap.describe
       - name: Upload Logs On Failure
         if: ${{ failure() }}
         uses: actions/upload-artifact@v3

@@ -23,6 +23,7 @@ allowedImages: []
 blockedImages:
   - badbox
 strictMode: false
+logLevel: "info"
 
 resources:
   requests:
