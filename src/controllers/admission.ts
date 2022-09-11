@@ -33,8 +33,15 @@ export function AdmissionController (instance: FastifyInstance, opts: FastifyPlu
       instance.log.warn(`Blocked creating pod with images = [${images.join(',')}]`)
     }
     reply.send({
-      uid: body.request?.uid,
-      allowed: allow
+      apiVersion: 'admission.k8s.io/v1',
+      kind: 'AdmissionReview',
+      response: {
+        uid: body.request.uid,
+        allowed: allow,
+        status: {
+          message: `One of the images in [${images.join(',')}] is not allowed, denied`
+        }
+      }
     })
     processStats.requestsServed = (processStats.requestsServed as number) + 1
   })

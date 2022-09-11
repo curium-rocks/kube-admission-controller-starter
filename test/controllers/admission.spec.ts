@@ -6,6 +6,7 @@ import fastifyInversifyPlugin from '../../src/inversify.fastify.plugin'
 import { AdmissionController } from '../../src/controllers/admission'
 import { Container } from 'inversify'
 import { TYPES } from '../../src/types'
+import pino from 'pino'
 
 function buildCreatePodRequest (imageName: string) : any {
   const baseReq = require('../requests/createPod.json')
@@ -20,7 +21,7 @@ describe('controllers/admission', () => {
   beforeEach(() => {
     fastify = Fastify()
     container = new Container()
-    mockAdmissionService = jest.mocked<IAdmission>(new Admission([], [], false))
+    mockAdmissionService = jest.mocked<IAdmission>(new Admission(pino({ level: 'error' }), [], [], false))
     container.bind<IAdmission>(TYPES.Services.Admission).toConstantValue(mockAdmissionService)
     fastify.register(fastifyInversifyPlugin, {
       container
@@ -41,8 +42,8 @@ describe('controllers/admission', () => {
     })
     expect(result.statusCode).toBe(200)
     const responseBody = JSON.parse(result.body)
-    expect(responseBody.uid).toEqual(payload.request.uid)
-    expect(responseBody.allowed).toBeFalsy()
+    expect(responseBody.response.uid).toEqual(payload.request.uid)
+    expect(responseBody.response.allowed).toBeFalsy()
   })
   it('Should allow images not ondisallow list', async () => {
     jest.spyOn(mockAdmissionService, 'allowAdmission').mockImplementation((images) => {
@@ -56,8 +57,8 @@ describe('controllers/admission', () => {
     })
     expect(result.statusCode).toBe(200)
     const responseBody = JSON.parse(result.body)
-    expect(responseBody.uid).toEqual(payload.request.uid)
-    expect(responseBody.allowed).toBeTruthy()
+    expect(responseBody.response.uid).toEqual(payload.request.uid)
+    expect(responseBody.response.allowed).toBeTruthy()
   })
   it('Should track requests served', async () => {
     jest.spyOn(mockAdmissionService, 'allowAdmission').mockImplementation((images) => {

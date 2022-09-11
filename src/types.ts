@@ -1,7 +1,8 @@
 const TYPES = {
   Services: {
     Kubernetes: Symbol.for('Kubernetes'),
-    Admission: Symbol.for('Admission')
+    Admission: Symbol.for('Admission'),
+    Logging: Symbol.for('Logging')
   },
   Config: {
     AllowedList: Symbol.for('AllowedList'),

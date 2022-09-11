@@ -20,9 +20,14 @@ describe('inversify.config', () => {
   })
   it('binds AllowList', () => {
     expect(appContainer.isBound(TYPES.Config.AllowedList)).toBeTruthy()
+    const allowedList: string[] = appContainer.get(TYPES.Config.AllowedList)
+    expect(allowedList.length).toEqual(0)
   })
   it('binds BlockedList', () => {
-    expect(appContainer.isBound(TYPES.Config.AllowedList)).toBeTruthy()
+    expect(appContainer.isBound(TYPES.Config.BlockedList)).toBeTruthy()
+    const blockedList: string[] = appContainer.get(TYPES.Config.BlockedList)
+    expect(blockedList.length).toBeGreaterThan(0)
+    expect(blockedList.some((b) => b === 'badbox')).toBeTruthy()
   })
   it('binds StrictMode', () => {
     expect(appContainer.isBound(TYPES.Config.StrictMode)).toBeTruthy()

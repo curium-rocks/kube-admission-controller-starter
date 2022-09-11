@@ -6,6 +6,7 @@ import { CoreV1Api, KubeConfig } from '@kubernetes/client-node'
 import { K8sClientBuilder } from './entities/kube'
 import { Admission, IAdmission } from './services/admission'
 import config from 'config'
+import pino, { Logger } from 'pino'
 
 const appContainer = new Container()
 
@@ -27,5 +28,10 @@ appContainer.bind<boolean>(TYPES.Config.StrictMode).toConstantValue(config.get<b
 appContainer.bind<boolean>(TYPES.Config.TLSEnabled).toConstantValue(config.get<boolean>('tls.enabled'))
 appContainer.bind<string>(TYPES.Config.TLSKeyPath).toConstantValue(config.get<string>('tls.keyPath'))
 appContainer.bind<string>(TYPES.Config.TLSCertPath).toConstantValue(config.get<string>('tls.certPath'))
+
+// create pino parent logger for services to use
+appContainer.bind<Logger>(TYPES.Services.Logging).toConstantValue(pino({
+  level: config.get<string>('log.level')
+}))
 
 export { appContainer }
