@@ -14,7 +14,7 @@ data:
       },
       "log": {
         "level": "{{ .Values.logLevel }}"
-      }
+      },
       "tls": {
         "enabled": true
       }
