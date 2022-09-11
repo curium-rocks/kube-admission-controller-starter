@@ -128,9 +128,6 @@ jobs:
     env:
       REGISTRY: 'ghcr.io'
       IMAGE_NAME: 'curium-rocks/kube-admission-controller-starter'
-    permissions:
-      contents: read
-      packages: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -144,7 +141,7 @@ jobs:
       - name: Start Minikube
         run: npm run minikube:start -- --kubernetes-version=${{ matrix.k8s-version }}
       - name: Create Pull Secret
-        run: npm run k8s:createPullSecret --helm_namespace=default --registry_username=${{ github.actor }} --registry_password=${{ secrets.GITHUB_TOKEN }}
+        run: npm run k8s:createPullSecret --helm_namespace=default --registry_username=${{ github.actor }} --registry_password=${{ github.token }}
       - name: Add Helm Repos
         run: npm run helm:addRepos
       - name: Deploy CertManager
