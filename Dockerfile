@@ -17,7 +17,7 @@ RUN npm run build
 FROM build-base AS libraries
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 FROM node:lts-alpine
 RUN apk add --update --no-cache dumb-init

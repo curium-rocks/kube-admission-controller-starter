@@ -5,7 +5,7 @@ import { Server } from '../src/server'
 describe('app', () => {
   it('Should create the server', async () => {
     const appObj = await app(appContainer, {
-      logger: true
+      logger: false
     }, '127.0.0.1', 30001)
     expect(appObj).toBeInstanceOf(Server)
     await appObj.open()
@@ -13,7 +13,7 @@ describe('app', () => {
   })
   it('Should close server', async () => {
     const appObj = await app(appContainer, {
-      logger: true
+      logger: false
     }, '127.0.0.1', 30002)
     expect(appObj).toBeInstanceOf(Server)
     await appObj.open()

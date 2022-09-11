@@ -1,4 +1,4 @@
-name: Node.js CI
+name: CI
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 jobs:
   build:
-
+    timeout-minutes: 10
     runs-on: ubuntu-latest
 
     strategy:
@@ -49,6 +49,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONARQUBE_KEY }}
   build-image:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     needs:
      - build
@@ -114,3 +115,53 @@ jobs:
         env:
           COSIGN_EXPERIMENTAL: "true"
         run: cosign sign --force --recursive ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }}
+  # deploy it and verify that expected things are allowed or disallowed
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        k8s-version: [1.22.13, 1.23.10, 1.24.4, 1.25.0]
+    needs:
+     - build-image
+    env:
+      REGISTRY: 'ghcr.io'
+      IMAGE_NAME: 'curium-rocks/kube-admission-controller-starter'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Start Minikube
+        run: npm run minikube:start -- --kubernetes-version=${{ matrix.k8s-version }}
+      - name: Create Pull Secret
+        run: npm run k8s:createPullSecret --helm_namespace=default --registry_username=${{ github.actor }} --registry_password=${{ github.token }}
+      - name: Add Helm Repos
+        run: npm run helm:addRepos
+      - name: Deploy CertManager
+        run: npm run helm:deployCertManager
+      - name: Deploy (PR)
+        if: ${{ github.event_name == 'pull_request' }}
+        run: npm run helm:deploy -- --set 'imagePullSecrets[0].name'=ghcr-credentials --set image.tag=pr-${{ github.event.number }}
+      - name: Deploy (Branch)
+        if: ${{ github.event_name != 'pull_request' }}
+        timeout-minutes: 10
+        run: npm run helm:deploy -- --set 'imagePullSecrets[0].name'=ghcr-credentials --set image.tag=main
+      - name: Collect Logs On Failure
+        if: ${{ failure() }}
+        run: |
+          mkdir -p /tmp/failure-logs
+          minikube logs > /tmp/failure-logs/minikube.log
+      - name: Upload Logs On Failure
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ runner.name }} minikube logs
+          path: |
+            /tmp/failure-logs
