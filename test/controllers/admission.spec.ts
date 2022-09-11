@@ -7,6 +7,12 @@ import { AdmissionController } from '../../src/controllers/admission'
 import { Container } from 'inversify'
 import { TYPES } from '../../src/types'
 
+function buildCreatePodRequest (imageName: string) : any {
+  const baseReq = require('../requests/createPod.json')
+  baseReq.request.object.spec.containers[0].image = imageName
+  return baseReq
+}
+
 describe('controllers/admission', () => {
   let fastify: FastifyInstance
   let container: Container
@@ -27,32 +33,30 @@ describe('controllers/admission', () => {
     jest.spyOn(mockAdmissionService, 'allowAdmission').mockImplementation((images) => {
       return Promise.resolve(false)
     })
+    const payload = buildCreatePodRequest('busybox')
     const result = await fastify.inject({
       method: 'POST',
-      payload: {
-        uid: 'blocked-uid'
-      },
+      payload,
       url: '/api/v1/admission'
     })
     expect(result.statusCode).toBe(200)
     const responseBody = JSON.parse(result.body)
-    expect(responseBody.uid).toEqual('blocked-uid')
+    expect(responseBody.uid).toEqual(payload.request.uid)
     expect(responseBody.allowed).toBeFalsy()
   })
   it('Should allow images not ondisallow list', async () => {
     jest.spyOn(mockAdmissionService, 'allowAdmission').mockImplementation((images) => {
       return Promise.resolve(true)
     })
+    const payload = buildCreatePodRequest('busybox')
     const result = await fastify.inject({
       method: 'POST',
-      payload: {
-        uid: 'allowed-uid'
-      },
+      payload,
       url: '/api/v1/admission'
     })
     expect(result.statusCode).toBe(200)
     const responseBody = JSON.parse(result.body)
-    expect(responseBody.uid).toEqual('allowed-uid')
+    expect(responseBody.uid).toEqual(payload.request.uid)
     expect(responseBody.allowed).toBeTruthy()
   })
   it('Should track requests served', async () => {
@@ -61,9 +65,7 @@ describe('controllers/admission', () => {
     })
     const testReqResp = await fastify.inject({
       method: 'POST',
-      payload: {
-        uid: 'meta-uid'
-      },
+      payload: buildCreatePodRequest('busybox'),
       url: '/api/v1/admission'
     })
     expect(testReqResp.statusCode).toEqual(200)

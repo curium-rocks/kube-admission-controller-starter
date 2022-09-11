@@ -1,3 +1,4 @@
+import { V1Container, V1PodSpec } from '@kubernetes/client-node'
 import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 import { IAdmission } from '../services/admission'
 import { TYPES } from '../types'
@@ -10,10 +11,30 @@ export function AdmissionController (instance: FastifyInstance, opts: FastifyPlu
 
   instance.post('/', async (req, reply) => {
     const body: any = req.body
-    instance.log.info(`Received admission review req: ${JSON.stringify(body)}`)
+    const images : string[] = []
+    if (body.kind === 'AdmissionReview' && body.request.operation === 'CREATE' && body.request.kind.kind === 'Pod') {
+      const newPod: V1PodSpec = body.request.object.spec
+      const pushImage = (c: V1Container) => {
+        images.push(c.image as string)
+      }
+      if (Array.isArray(newPod.containers)) {
+        newPod.containers.forEach(pushImage)
+      }
+      if (Array.isArray(newPod.initContainers)) {
+        newPod.initContainers?.forEach(pushImage)
+      }
+      if (Array.isArray(newPod.ephemeralContainers)) {
+        newPod.ephemeralContainers?.forEach(pushImage)
+      }
+      instance.log.info(`Detected images in pod create request = [${images.join(',')}]`)
+    }
+    const allow = await admissionService.allowAdmission(images)
+    if (!allow) {
+      instance.log.warn(`Blocked creating pod with images = [${images.join(',')}]`)
+    }
     reply.send({
-      uid: body.uid,
-      allowed: await admissionService.allowAdmission([])
+      uid: body.request?.uid,
+      allowed: allow
     })
     processStats.requestsServed = (processStats.requestsServed as number) + 1
   })
