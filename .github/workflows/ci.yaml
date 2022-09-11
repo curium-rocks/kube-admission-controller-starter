@@ -160,7 +160,9 @@ jobs:
         run: |
           mkdir -p /tmp/failure-logs
           minikube logs > /tmp/failure-logs/minikube.log
-          kubectl logs deployments/kube-admission-controller-starter --prefix=true --ignore-errors=true --timestamps --pod-running-timeout=60s > /tmp/failure-logs/kube-admission-controller-start.deployment.log
+          kubectl logs deployments/kube-admission-controller-starter --prefix=true --ignore-errors=true --timestamps --pod-running-timeout=60s > /tmp/failure-logs/kube-admission-controller-starter.deployment.log
+          kubectl describe deployment kube-admission-controller-starter > /tmp/failure-logs/kube-admission-controller-starter.describe
+          kubectl get deployment kube-admission-controller-starter -o yaml > /tmp/failure-logs/kube-admission-controller-starter.yaml
       - name: Upload Logs On Failure
         if: ${{ failure() }}
         uses: actions/upload-artifact@v3
