@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  kube-admission-controller-starter:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2022-09-11T19:21:31.888836072Z"
+    description: A starter template for a dynamic admission validating webhook
+    digest: 3ef2bec333cc6c7d4fca12093d5cc1d5ab0d7cb999f76b91f00c313ae7ea9979
+    name: kube-admission-controller-starter
+    type: application
+    urls:
+    - https://github.com/curium-rocks/kube-admission-controller-starter/releases/download/kube-admission-controller-starter-0.1.0/kube-admission-controller-starter-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-09-11T19:21:31.888842372Z"
