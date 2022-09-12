@@ -34,6 +34,14 @@ The following scripts are included in the NPM project configuration
 - `helm:uninstallCertManager` remove cert-manager from the k8s cluster
 
 ## Deploy it
+If you don't already have cert manager installed you will need to run:
+
+``` bash
+helm repo add jetstack https://charts.jetstack.io && helm repo update && \
+  helm upgrade --install --namespace cert-manager --create-namespace \
+  cert-manager jetstack/cert-manager --set installCRDs=true --debug --wait
+```
+
 First add the helm repos `helm repo add k8s https://curium-rocks.github.io/kube-admission-controller-starter` fetch updates `helm repo update`. 
 
 Verify it worked `helm search repo k8s` and you should see something like.
