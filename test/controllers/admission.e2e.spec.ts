@@ -63,7 +63,7 @@ describe('controllers/admission', () => {
       } as V1Pod)
       expect(resp.response.statusMessage).not.toEqual('Created')
     } catch (err) {
-      expect((err as any).body.message).toEqual('admission webhook "kube-admission-controller-starter.default.svc" denied the request: One of the images in [badbox] is not allowed, denied')
+      expect((err as any).body.message).toEqual('admission webhook "k8s-validating-webhook.default.svc" denied the request: One of the images in [badbox] is not allowed, denied')
     }
   })
   it('Should allow busybox with defaults', async () => {
