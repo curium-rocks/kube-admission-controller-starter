@@ -37,7 +37,7 @@ metadata:
 rules:
 - apiGroups: ["admissionregistration.k8s.io"]
   resources: ["validatingwebhookconfigurations"]
-  resourceNames: ["{{ include "kube-admission-controller-starter.fullname" . }}-hooks"]
+  resourceNames: ["{{ include "k8s-validating-webhook.fullname" . }}-hooks"]
   verbs: ["get", "update", "patch"]
 
 {{- /*create sa for job*/}}
@@ -48,7 +48,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
   name: {{ .Release.Name }}-post-install-job-sa
   labels:
-    {{- include "kube-admission-controller-starter.labels" . | nindent 4 }}
+    {{- include "k8s-validating-webhook.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": post-install
     "helm.sh/hook-weight": "0"
@@ -167,8 +167,8 @@ spec:
           - name: RELEASE_NAMESPACE
             value: "{{ .Release.Namespace }}"
           - name: HOOK_NAME
-            value: "{{ include "kube-admission-controller-starter.fullname" . }}-hooks"
+            value: "{{ include "k8s-validating-webhook.fullname" . }}-hooks"
           - name: HOOK_SVC_NAME
-            value: "{{ include "kube-admission-controller-starter.fullname" . }}.{{ .Release.Namespace }}.svc"
+            value: "{{ include "k8s-validating-webhook.fullname" . }}.{{ .Release.Namespace }}.svc"
         command: ["/job/entry-point.sh"]
 {{- end }}
