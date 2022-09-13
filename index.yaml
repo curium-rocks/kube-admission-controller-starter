@@ -1,5 +1,16 @@
 apiVersion: v1
 entries:
+  k8s-validating-webhook:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2022-09-13T23:00:44.649640442Z"
+    description: A starter template for a dynamic admission validating webhook
+    digest: 410a107dabde58a9ae3753865a993ec5ef2aa24702d944cbeb6855695bdd1d0a
+    name: k8s-validating-webhook
+    type: application
+    urls:
+    - https://github.com/curium-rocks/k8s-validating-webhook/releases/download/k8s-validating-webhook-0.3.0/k8s-validating-webhook-0.3.0.tgz
+    version: 0.3.0
   kube-admission-controller-starter:
   - apiVersion: v2
     appVersion: 0.1.0
@@ -21,4 +32,4 @@ entries:
     urls:
     - https://github.com/curium-rocks/kube-admission-controller-starter/releases/download/kube-admission-controller-starter-0.1.0/kube-admission-controller-starter-0.1.0.tgz
     version: 0.1.0
-generated: "2022-09-11T20:10:13.476468421Z"
+generated: "2022-09-13T23:00:44.649662141Z"
