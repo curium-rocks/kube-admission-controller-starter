@@ -48,7 +48,7 @@ Verify it worked `helm search repo k8s` and you should see something like.
 
 ```
 NAME                                                    CHART VERSION   APP VERSION     DESCRIPTION                                       
-k8s/kube-admission-controller...      0.1.0           0.1.0           A starter template for a dynamic admission vali...
+k8s/k8s-validating-we...      0.1.0           0.1.0           A starter template for a dynamic admission vali...
 ```
 
 Deploy the app `helm upgrade --install starter k8s/k8s-validating-webhook`
