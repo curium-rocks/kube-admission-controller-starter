@@ -60,7 +60,7 @@
     "@fastify/under-pressure": "^8.1.0",
     "@kubernetes/client-node": "^0.17.0",
     "config": "^3.3.8",
-    "fastify": "^4.5.3",
+    "fastify": "^4.8.1",
     "fastify-plugin": "^4.2.1",
     "inversify": "^6.0.1",
     "reflect-metadata": "^0.1.13"
